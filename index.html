@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>G7Pics —— 2026届G7班照片</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: "Microsoft YaHei", sans-serif;
+        }
+        body {
+            background-color: #f5f7fa;
+            padding: 30px 15px;
+        }
+        .header-box {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+        h1 {
+            color: #222;
+            font-size: 32px;
+            margin-bottom: 12px;
+        }
+        .contact-text {
+            color: #666;
+            font-size: 16px;
+        }
+        .contact-text span {
+            color: #2563eb;
+            font-weight: 500;
+        }
+        .gallery {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+            gap: 16px;
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+        .img-item {
+            position: relative;
+            width: 100%;
+            padding-top: 100%;
+            overflow: hidden;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            cursor: pointer;
+            transition: transform 0.25s ease;
+            background: #e8edf3;
+        }
+        .img-item:hover {
+            transform: scale(1.03);
+        }
+        .img-item img {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        .lightbox {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            background: rgba(0,0,0,0.9);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            z-index: 9999;
+            padding: 30px;
+        }
+        .lightbox.show {
+            display: flex;
+        }
+        .lightbox img {
+            max-width: 95%;
+            max-height: 90vh;
+            border-radius: 6px;
+        }
+        .close-btn {
+            position: absolute;
+            top: 25px;
+            right: 30px;
+            color: #fff;
+            font-size: 40px;
+            cursor: pointer;
+            user-select: none;
+        }
+        .empty-tip {
+            text-align: center;
+            color: #888;
+            font-size: 18px;
+            padding: 80px 0;
+        }
+    </style>
+</head>
+<body>
+    <div class="header-box">
+        <h1>G7Pics —— 2026届G7班照片</h1>
+        <p class="contact-text">投稿微信：<span>gsorg_101724</span> 或者 <span>tangentlab</span></p>
+    </div>
+
+    <div class="gallery" id="galleryBox"></div>
+
+    <div class="lightbox" id="lightbox">
+        <div class="close-btn" id="closeBtn">×</div>
+        <img id="fullImg" src="" alt="原图">
+    </div>
+
+    <script>
+        // 从1.jpg 到 20.jpg，不够/多余可自行修改数字
+        let imgFiles = [];
+        for(let i = 1; i <= 500; i++){
+            imgFiles.push(i + ".jpg");
+        }
+
+        const galleryBox = document.getElementById('galleryBox');
+        const lightbox = document.getElementById('lightbox');
+        const fullImg = document.getElementById('fullImg');
+        const closeBtn = document.getElementById('closeBtn');
+
+        function renderGallery() {
+            let hasImage = false;
+            imgFiles.forEach(fileName => {
+                const testImg = new Image();
+                testImg.src = fileName;
+                testImg.onload = () => {
+                    hasImage = true;
+                    const wrap = document.createElement('div');
+                    wrap.className = 'img-item';
+                    const img = document.createElement('img');
+                    img.src = fileName;
+                    img.alt = fileName;
+                    wrap.onclick = () => {
+                        fullImg.src = fileName;
+                        lightbox.classList.add('show');
+                    };
+                    wrap.appendChild(img);
+                    galleryBox.appendChild(wrap);
+                }
+            });
+            setTimeout(()=>{
+                if(!hasImage){
+                    galleryBox.innerHTML = '<div class="empty-tip">未找到图片，请放入1.jpg、2.jpg等文件</div>';
+                }
+            },800)
+        }
+
+        closeBtn.onclick = () => lightbox.classList.remove('show');
+        lightbox.onclick = (e) => {
+            if (e.target === lightbox) lightbox.classList.remove('show');
+        }
+
+        window.onload = renderGallery;
+    </script>
+</body>
+</html>
